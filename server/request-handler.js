@@ -34,7 +34,7 @@ exports.requestHandler = function(request, response) {
     request.on('data', function (chunk) {
       data += chunk;
     });
-    request.on('end', function(message) {
+    request.on('end', function() {
       message = JSON.parse(data);
       message.messageId = ++objectId;
       messages.push(message);
@@ -43,8 +43,10 @@ exports.requestHandler = function(request, response) {
     statusCode = 200;
   } else if (method === 'OPTIONS') {
     statusCode = 200;
+    response.writeHead(statusCode, headers);
+    response.end();
   }
-  if (url !== '/classes/messages') {
+  if (url.indexOf('/classes/messages') < 0 ) {
     statusCode = 404;
   }
   var responseBody = {
